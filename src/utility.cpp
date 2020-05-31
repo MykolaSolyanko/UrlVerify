@@ -2,6 +2,7 @@
 #include "cxxopts.hpp"
 #include <iostream>
 #include <regex>
+#include "logger.hpp"
 
 constexpr size_t kDeps{4};
 static bool IsUrl(const std::string& url) {
@@ -25,15 +26,16 @@ UrlParseData parse_comand_line(int argc, char** argv) { // url deps
   }
 
   if (parse_result.count("url") == 0) {
-    std::cout << "url must be set\n";
+    std::cerr << "url must be set\n";
+    CreateLoggerObject().print(Level::ERROR, "url must be set");
     return std::nullopt;
   }
 
   auto url = parse_result["url"].as<std::string>();
-  std::cout << url << std::endl;
 
   if (!IsUrl(url)) {
-    std::cout << "incorrect url\n";
+    std::cerr << "incorrect url\n";
+    CreateLoggerObject().print(Level::ERROR, "incorrect url");
     return std::nullopt;
   }
 
